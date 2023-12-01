@@ -24,25 +24,42 @@ void countWordsAndCharacters(const char* text, int* wordCount, int* charCount) {
     }
 }
 
+int hasDoubleLetters(const char* word) {
+    while (*word && *(word + 1)) {
+        if (tolower((unsigned char)(*word)) == tolower((unsigned char)(*(word + 1)))) {
+            return 1;
+        }
+        word++;
+    }
+    return 0;
+}
+
 void removeWordsWithDoubleLetters(char* text) {
     char* src = text;
     char* dest = text;
 
     while (*src) {
-        if (!isalpha((unsigned char)(*src)) || !isalpha((unsigned char)(*(src + 1)))) {
+        if (!isalpha((unsigned char)(*src))) {
             *dest = *src;
             dest++;
             src++;
-        }
-        else if (tolower((unsigned char)(*src)) == tolower((unsigned char)(*(src + 1)))) {
-            while (isalpha((unsigned char)(*src)) && isalpha((unsigned char)(*(src + 1)))) {
-                src++;
-            }
         }
         else {
-            *dest = *src;
-            dest++;
-            src++;
+            char word[50];
+            int i = 0;
+
+            while (isalpha((unsigned char)(*src))) {
+                word[i] = *src;
+                i++;
+                src++;
+            }
+
+            word[i] = '\0';
+
+            if (!hasDoubleLetters(word)) {
+                strcpy_s(dest, _countof(word), word);
+                dest += i;
+            }
         }
     }
 
